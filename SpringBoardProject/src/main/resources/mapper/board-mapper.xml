@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.koreait.mapper.BoardMapper">
+	<select id="selectBoardList" parameterType="int"
+		resultType="board">
+		select * from (select ceil(rownum / 15) as pageNo, b.* from
+		board_view b)
+		where pageNo = #{pageNo}
+	</select>
+	
+	<select id="selectBoardCount" resultType="int">
+		select count(*) from
+		board_view
+	</select>
+	
+	<select id="selectBoardDTO" parameterType="int"	resultType="board">
+		select * from board_view where bno = #{bno}
+	</select>
+	
+	<select id="selectCommentDTO" parameterType="int" resultType="comment">
+		select * from board_comment_view where bno = #{bno}
+	</select>
+	
+	<select id="selectFileList" parameterType="int" resultType="file">
+		select * from board_file where bno = #{bno} 
+	</select>
+	
+	<update id="addBoardCount" parameterType="int">
+		update board set bcount = bcount + 1 where bno = #{bno}
+	</update>
+	
+	<delete id="deleteBoard" parameterType="int">
+		delete from board where bno = #{bno}
+	</delete>
+	
+	<insert id="addBoardComment" parameterType="comment">
+		insert into board_comment values(board_comment_cno.nextval, #{content}, sysdate, #{bno}, #{writer})
+	</insert>
+	
+	<insert id="insertBoardLike" parameterType="map">
+		insert into board_like values(#{bno},#{id})
+	</insert>
+	
+	<delete id="deleteBoardLike" parameterType="map">
+		delete from board_like where bno = #{bno} and id = #{id}
+ 	</delete>
+	
+	<insert id="insertBoardHate" parameterType="map">
+		insert into board_hate values(#{bno},#{id})
+	</insert>
+	
+	<delete id="deleteBoardHate" parameterType="map">
+		delete from board_hate where bno = #{bno} and id = #{id}
+ 	</delete>
+ 	
+ 	<select id="selectBoardNo" resultType="int">
+ 		select board_bno.nextval from dual
+ 	</select>
+ 	
+ 	<insert id="insertBoard" parameterType="board">
+ 		insert into board(bno, title, writer, bcount, content)
+ 		values(#{bno}, #{title}, #{writer}, 0, #{content})
+ 	</insert>
+ 	
+ 	<insert id="insertFileList" parameterType="file">
+ 		insert into board_file(bno, fno, path)
+ 		values(#{bno}, #{fno}, #{path})
+ 	</insert>
+ 	
+ 	<select id="selectFile" parameterType="map" resultType="String">
+ 		select path from board_file where bno = #{bno} and fno = #{fno}
+ 	</select>
+ 	
+ 	<delete id="deleteBoardComment" parameterType="int">
+ 		delete from board_comment where cno = #{cno}
+ 	</delete>
+ 	
+ 	<insert id="insertBoardCommentLike" parameterType="map">
+ 		insert into board_comment_like values(#{cno},#{writer})
+ 	</insert>
+ 	
+ 	<delete id="deleteBoardCommentLike" parameterType="map">
+ 		delete from board_comment_like where cno = #{cno} and id = #{writer}
+ 	</delete>
+ 	
+ 	<insert id="insertBoardCommentHate" parameterType="map">
+ 		insert into board_comment_hate values(#{cno},#{writer})
+ 	</insert>
+ 	
+ 	<delete id="deleteBoardCommentHate" parameterType="map">
+ 		delete from board_comment_hate where cno = #{cno} and id = #{writer}
+ 	</delete>
+ 	
+ 	<select id="selectBoardImageNo" resultType="int">
+ 		select board_image_no.nextval from dual
+ 	</select>
+ 	
+ 	<insert id="insertBoardImage" parameterType="map">
+		insert into board_image values(#{fno},#{path})
+	</insert>
+	
+	<select id="selectImageFile" parameterType="int" resultType="String">
+		select path from board_image where bi_no = #{fno}
+	</select>
+	
+	<select id="selectNextBefore" parameterType="int" resultType="map">
+		select next, before from (select nvl(lag(bno) over (order by bno desc), -1) as next,
+		nvl(lead(bno) over (order by bno desc), -1) as before,
+		bv.* from board_view bv) where bno = #{bno}
+	</select>
+</mapper>
+
+
+
+
+
+
+

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.StudentMapper">
+	<select id="searchStudent" parameterType="map" resultType="student">
+		select sno, name, major, score from student where
+		<choose>
+			<when test="kind.equals('sno')">
+				sno like '%' || #{search} || '%'
+			</when>
+			<when test="kind.equals('name')">
+				name like '%' || #{search} || '%'
+			</when>
+			<otherwise>
+				major like ${search}
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="selectAllStudent" resultType="student">
+		select sno, name, major, score from student
+	</select>
+</mapper>
+
+
+
+
+
+
+

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.koreait.mapper.QnAMapper">
+	<insert id="insertQnA" parameterType="qna">
+		insert into qna(qno, title, content, writer) values(qno_seq.nextval, #{title}, #{content}, #{writer})
+	</insert>
+	
+	<select id="selectQnaList" parameterType="map" resultType="qna">
+		select * from(
+			select ceil(rownum/5) as page, q.* from
+				(select qno,title,content,wdate,writer,status,nvl(response,'입력된 답변이 없습니다') as response
+				from qna where writer like #{writer} order by qno desc) q)
+		where page = #{page}
+	</select>
+	
+	<select id="selectQnaAdminList" parameterType="int" resultType="qna">
+		select * from(
+			select ceil(rownum/5) as page, q.* from
+				(select qno,title,content,wdate,writer,status,nvl(response,'입력된 답변이 없습니다') as response
+				from qna order by qno desc) q)
+		where page = #{page}
+	</select>
+	
+	<select id="selectCount" resultType="int">
+		select count(*) from qna
+	</select>
+	
+	<select id="selectQna" parameterType="int" resultType="qna">
+		select * from qna where qno = #{qno}
+	</select>
+	
+	<update id="updateResponse" parameterType="map">
+		update qna set response = #{response} where qno = #{qno}
+	</update>
+	
+	<update id="updateStatus" parameterType="int">
+		update qna set status = 2 where qno = #{qno}
+	</update>
+	
+	<update id="updateStatusView" parameterType="int">
+		update qna set status = 1 where qno = #{qno}
+	</update>
+	
+</mapper> 
+
+
+
+
+
+
+

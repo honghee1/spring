@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.koreait.mapper.MemberMapper">
+	<select id="login" parameterType="Map" resultType="member">
+		select id, passwd, name, nick, grade_no as gradeNo
+		from board_member where id = #{id} and passwd = #{passwd}
+	</select>
+	
+	<insert id="insertMember" parameterType="member">
+		insert into board_member values(#{id}, #{passwd}, #{name}, #{nick}, 1)
+	</insert>
+	
+	<select id="selectAllMember" resultType="member">
+		select id, passwd, name, nick, grade_no as gradeNo from board_member
+	</select>
+	
+	<delete id="deleteMember" parameterType="String">
+		delete from board_member where id = #{id}
+	</delete>
+	
+	<update id="updateMember" parameterType="member">
+		update board_member set passwd = #{passwd}, name = #{name}, nick = #{nick}, grade_no = #{gradeNo} where id = #{id}
+	</update>
+	
+	<select id="selectMember" parameterType="map" resultType="member">
+		select id, passwd, name, nick, grade_no as gradeNo
+		from board_member where
+		<choose>
+			<when test="kind.equals('id')">
+				id like '%' || #{search} || '%'
+			</when>
+			<when test="kind.equals('name')">
+				name like '%' || #{search} || '%'
+			</when>
+			<otherwise>
+				grade_no = #{search}
+			</otherwise>
+		</choose>
+	</select>
+</mapper>
+
+
+
+
+
+
+

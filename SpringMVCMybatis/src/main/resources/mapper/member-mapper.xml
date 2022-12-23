@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.MemberMapper">
+   <select id="selectAllMember" resultType="member">
+   		select * from member
+   </select>
+   
+   <insert id="insertMemberDTO" parameterType="member">
+   		insert into member values(#{id}, #{passwd}, #{name}, #{age}, #{gender}, #{address})
+   </insert>
+   
+   <delete id="deleteMember" parameterType="String">
+   		delete from member where id like #{id}
+   </delete>
+   
+   <select id="selectMember" parameterType="String" resultType="member">
+   		select * from member where id like #{id}
+   </select>
+   
+   <update id="updateMember" parameterType="member">
+   		update member set passwd = #{passwd}, name = #{name}, age = #{age}, gender = #{gender},
+   		address = #{address} where id like #{id}
+   </update> 
+</mapper>
